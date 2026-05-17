@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional // Ovo osigurava da se baza očisti nakon svakog testa!
+@Transactional
 public class HabitLogControllerIntegrationTest {
 
     @Autowired
@@ -38,29 +38,25 @@ public class HabitLogControllerIntegrationTest {
 
     @Test
     public void testSlozenaValidacijaDuplogUnosa() throws Exception {
-        // 1. Priprema: Stvaramo i spremamo testnu naviku u bazu
         Habit testHabit = new Habit();
         testHabit.setTitle("Meditacija");
         testHabit.setDescription("10 minuta");
         testHabit = habitRepository.save(testHabit);
 
-        // 2. Priprema: Stvaramo prvi log za današnji datum
         HabitLog firstLog = new HabitLog();
         firstLog.setDate(LocalDate.now());
         firstLog.setCompleted(true);
         firstLog.setHabit(testHabit);
 
-        // Šaljemo prvi POST zahtjev - ovo mora proći (200 OK)
         mockMvc.perform(post("/api/logs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstLog)))
                 .andExpect(status().isOk());
 
-        // 3. Test: Pokušavamo poslati POTPUNO ISTI log ponovno
         mockMvc.perform(post("/api/logs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstLog)))
-                .andExpect(status().isBadRequest()) // Očekujemo grešku 400
-                .andExpect(content().string("Navika je već logirana za ovaj datum!")); // Očekujemo našu poruku
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Navika je već logirana za ovaj datum!")); 
     }
 }

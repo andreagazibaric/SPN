@@ -28,11 +28,9 @@ public class HabitLogController {
     @PostMapping
     public ResponseEntity<?> createLog(@RequestBody HabitLog log) {
         try {
-            // Zovemo servis koji obavlja složenu validaciju
             HabitLog savedLog = habitLogService.saveLog(log);
             return ResponseEntity.ok(savedLog);
         } catch (IllegalArgumentException e) {
-            // Ako validacija padne, vraćamo grešku 400 s porukom kolegici na frontend
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -42,4 +40,17 @@ public class HabitLogController {
         habitLogRepository.deleteById(id);
         return "Log obrisan!";
     }
+
+    @PutMapping("/{id}")
+    public HabitLog updateLog(@PathVariable Long id, @RequestBody HabitLog updatedLog) {
+
+        HabitLog log = habitLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Log nije pronađen"));
+
+        log.setCompleted(updatedLog.isCompleted());
+        log.setDate(updatedLog.getDate());
+
+        return habitLogRepository.save(log);
+    }
+
 }

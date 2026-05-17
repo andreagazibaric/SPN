@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(HabitLogController.class) // Testira isključivo web kontroler sloj
+@WebMvcTest(HabitLogController.class)
 public class HabitLogControllerUnitTest {
 
     @Autowired

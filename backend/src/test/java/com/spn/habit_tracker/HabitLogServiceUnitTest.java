@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class) // Testira čisti servis bez dizanja Springa (brzo)
+@ExtendWith(MockitoExtension.class)
 public class HabitLogServiceUnitTest {
 
     @Mock
